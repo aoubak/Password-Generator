@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Generate a secure password</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-1: #150826;
+            /* deep purple */
+            --bg-2: #231133;
+            --card: #2b1740;
+            --panel: #3a1f4b;
+            --neon: #2ee08c;
+            /* neon green */
+            --muted: #99a3b2;
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            background: radial-gradient(900px 400px at 10% 30%, rgba(46, 224, 140, 0.06), transparent),
+                radial-gradient(700px 300px at 90% 80%, rgba(20, 200, 255, 0.03), transparent),
+                linear-gradient(180deg, var(--bg-1), var(--bg-2));
+            font-family: outfit, Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        .card {
+            background: #4529798c;
+            /* background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); */
+            border-radius: 28px;
+            border: 1px solid rgba(46, 224, 140, 0.18);
+            box-shadow: 0 10px 30px rgba(10, 8, 20, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        }
+
+        .panel {
+            background: #452A79;
+            /* background: linear-gradient(180deg, var(--panel), rgba(31,14,40,0.9)); */
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* Toggle buttons */
+        .opt-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.200);
+            cursor: pointer;
+            font-weight: 600;
+            color: #cfc7d9;
+            background: transparent;
+        }
+
+        .opt-btn.active {
+            background: linear-gradient(90deg, var(--neon), #18b57a);
+            color: #07141a;
+            box-shadow: 0 6px 18px rgba(46, 224, 140, 0.14), inset 0 -2px 0 rgba(0, 0, 0, 0.08)
+        }
+
+        .opt-hidden {
+            position: absolute;
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+            white-space: nowrap
+        }
+
+        /* Styled range */
+        input[type=range] {
+            -webkit-appearance: none;
+            height: 12px;
+            background: transparent;
+            width: 100%
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            height: 12px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--neon), var(--neon) 0%, #221033 0%)
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            margin-top: -8px;
+            height: 28px;
+            width: 28px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #2ee08c, #21a974);
+            box-shadow: 0 6px 14px rgba(46, 224, 140, 0.18);
+            border: 4px solid #0f0b13
+        }
+
+        /* Firefox */
+        input[type=range]::-moz-range-track {
+            height: 12px;
+            border-radius: 999px;
+            background: #221033
+        }
+
+        input[type=range]::-moz-range-progress {
+            height: 12px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--neon), var(--neon))
+        }
+
+        .neon-input {
+            background: transparent;
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 1px solid rgba(46, 224, 141, 0.200);
+            color: #dfe7ee;
+            outline: rgba(46, 224, 141, 0.5);
+        }
+
+        .coppy-btn {
+            background: rgba(46, 224, 141, 0.226);
+            border: 1px solid rgba(46, 224, 141, 0.347);
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .status {
+            /* background: rgba(46, 224, 141, 0.226); */
+            border: 1px solid rgba(46, 224, 141, 0.347);
+            color: var(--bg-1);
+        }
+
+        .generateBtn {
+            color: var(--bg-1);
+            background: linear-gradient(180deg, #2ee08c, #21a974);
+            
+        }
+
+        /* small responsive tweaks */
+        @media (max-width:640px) {
+            .panel {
+                padding: 12px
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-8">
+    <div class="w-full max-w-3xl card p-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-white">Generate a secure password</h1>
+
+        </div>
+
+        <div class="panel">
+            <div class="mb-6">
+                <label class="block text-sm font-medium muted mb-2">Password</label>
+                <div class="flex gap-3 items-center">
+                    <input id="passwordOutput" readonly class="flex-1 neon-input text-lg font-medium" value="" />
+                    <button id="copyBtn" class="coppy-btn inline-flex items-center gap-2 px-4 py-4 rounded-lg"
+                        aria-label="Copy">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 1H4a2 2 0 0 0-2 2v12" stroke="#07141a" stroke-width="1.6"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <rect x="8" y="5" width="13" height="13" rx="2" stroke="#07141a" stroke-width="1.6"
+                                stroke-linecap="round" stroke-linejoin="round" fill="#2ee08c" />
+                        </svg>
+                        <span id="copyLabel" class="text-sm font-semibold text-white">Copy</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium muted mb-3">Customize your password</label>
+                        <div class="flex gap-4 flex-wrap">
+                            <input class="opt-hidden" type="checkbox" id="optUpper" checked>
+                            <label for="optUpper" class="opt-btn" id="lbl-optUpper">UpperCase</label>
+
+                            <input class="opt-hidden" type="checkbox" id="optNumbers" checked>
+                            <label for="optNumbers" class="opt-btn" id="lbl-optNumbers">Nummeric</label>
+
+                            <input class="opt-hidden" type="checkbox" id="optSymbols" checked>
+                            <label for="optSymbols" class="opt-btn active" id="lbl-optSymbols">Symbols</label>
+
+                            <input class="opt-hidden" type="checkbox" id="optLower" checked>
+                            <label for="optLower" class="opt-btn" id="lbl-optLower">LowerCase</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="block text-sm font-medium muted">Password Length</label>
+                            <div class="text-sm text-white">Max:<span class="font-semibold">256</span></div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <input id="lengthRange" type="range" min="4" max="256" value="16" />
+                        </div>
+                        <div class="mt-3 flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-full bg-white/6 flex items-center justify-center text-white font-semibold">
+                                <span id="lengthLabel">16</span>
+                            </div>
+                            <input id="lengthNumber" type="number" min="4" max="256" value="16"
+                                class="rounded-md border px-2 py-1 text-sm bg-transparent text-white" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <div class="flex items-center justify-between">
+                    <button id="generateBtn"
+                        class="generateBtn inline-flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg">
+                        <!-- <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2v6" stroke="#06332a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 12H4" stroke="#06332a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> -->
+                        <span id="generateLabel" class="font-semibold ">Generate</span>
+                    </button>
+                    <div class="text-sm rounded-md bg-white  px-4 py-4 status muted">Strength: <span id="strength"
+                            class="font-semibold text-white">—</span></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 md:mt-4 text-sm text-center  text-green-300">
+            Powered by <span class="font-semibold text-white">Ayub
+                Said.</span></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
