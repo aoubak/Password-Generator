@@ -82,11 +82,11 @@ function evaluateStrength(pw) {
   if (/[0-9]/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
 
-  if (score <= 1) return {label: 'Very Weak', color: 'text-red-600'};
-  if (score === 2) return {label: 'Weak', color: 'text-orange-500'};
-  if (score === 3) return {label: 'Medium', color: 'text-amber-600'};
-  if (score === 4) return {label: 'Strong', color: 'text-green-600'};
-  return {label: 'Very Strong', color: 'text-green-800'};
+  if (score <= 1) return {label: 'Very Weak', color: 'text-red-400'};
+  if (score === 2) return {label: 'Weak', color: 'text-orange-400'};
+  if (score === 3) return {label: 'Medium', color: 'text-amber-400'};
+  if (score === 4) return {label: 'Strong', color: 'text-green-400'};
+  return {label: 'Very Strong', color: 'text-green-400'};
 }
 
 function updateStrength(pw) {
